@@ -1,6 +1,6 @@
-#include "game.h"
-#include "resource_manager.h"
-#include "sprite_renderer.h"
+#include "Game.h"
+#include "ResourceManager.h"
+#include "SpriteRenderer.h"
 
 
 // Game-related State data

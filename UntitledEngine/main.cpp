@@ -2,8 +2,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "game.h"
-#include "resource_manager.h"
+#include "Game.h"
+#include "ResourceManager.h"
 
 
 // GLFW function declerations
