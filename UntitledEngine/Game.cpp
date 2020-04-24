@@ -56,6 +56,7 @@ void Game::Init()
 
 void Game::Update(GLfloat dt)
 {
+	printf("FPS: %f\n", 1.0f / dt);
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		if (!scene->playerBullets[i]->destroyed) {
 			scene->playerBullets[i]->Update(dt);
