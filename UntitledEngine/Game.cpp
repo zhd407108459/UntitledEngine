@@ -56,30 +56,6 @@ void Game::Init()
 
 void Game::Update(GLfloat dt)
 {
-	if (Keys[87]) {//W
-		scene->player->GetComponent<Player>()->moveDirection.y = -1;
-	}
-	else if(Keys[83]) {//S
-		scene->player->GetComponent<Player>()->moveDirection.y = 1;
-	}
-	else {
-		scene->player->GetComponent<Player>()->moveDirection.y = 0;
-	}
-	if (Keys[65]) {//A
-		scene->player->GetComponent<Player>()->moveDirection.x = -1;
-	}
-	else if (Keys[68]) {//D
-		scene->player->GetComponent<Player>()->moveDirection.x = 1;
-	}
-	else {
-		scene->player->GetComponent<Player>()->moveDirection.x = 0;
-	}
-
-	if (Keys[32]) {//Space
-		scene->player->GetComponent<Player>()->Shoot();
-	}
-
-
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		if (!scene->playerBullets[i]->destroyed) {
 			scene->playerBullets[i]->Update(dt);
@@ -111,7 +87,32 @@ void Game::Update(GLfloat dt)
 
 void Game::ProcessInput(GLfloat dt)
 {
+	if (Keys[87]) {//W
+		scene->player->GetComponent<Player>()->moveDirection.y = -1;
+	}
+	else if (Keys[83]) {//S
+		scene->player->GetComponent<Player>()->moveDirection.y = 1;
+	}
+	else {
+		scene->player->GetComponent<Player>()->moveDirection.y = 0;
+	}
+	if (Keys[65]) {//A
+		scene->player->GetComponent<Player>()->moveDirection.x = -1;
+	}
+	else if (Keys[68]) {//D
+		scene->player->GetComponent<Player>()->moveDirection.x = 1;
+	}
+	else {
+		scene->player->GetComponent<Player>()->moveDirection.x = 0;
+	}
 
+	if (Keys[32]) {//Space
+		scene->player->GetComponent<Player>()->Shoot();
+	}
+
+	if (Keys[84]) {//T
+		Restart();
+	}
 }
 
 void Game::Render()
@@ -223,4 +224,16 @@ void Game::HandleCollisions()
 		}
 		
 	}
+}
+
+void Game::Restart()
+{
+	scene = new Scene();
+	scene->CreateDefaultScene();
+
+	for (int i = 0; i < scene->enemies.size(); i++) {
+		scene->enemies[i]->Start();
+	}
+
+	scene->player->Start();
 }

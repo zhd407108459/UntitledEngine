@@ -42,6 +42,7 @@ public:
 private:
 	bool IsInScreen(glm::vec2 pos);
 	void HandleCollisions();
+	void Restart();
 };
 
 #endif
