@@ -4,7 +4,10 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Scene.h"
+#include "PhysicsGeneralMethods.h"
 
+using namespace Physics;
 
 // Represents the current state of the game
 enum GameState {
@@ -23,6 +26,9 @@ public:
 	GameState              State;
 	GLboolean              Keys[1024];
 	GLuint                 Width, Height;
+
+	Scene* scene;
+
 	// Constructor/Destructor
 	Game(GLuint width, GLuint height);
 	~Game();
@@ -32,6 +38,10 @@ public:
 	void ProcessInput(GLfloat dt);
 	void Update(GLfloat dt);
 	void Render();
+
+private:
+	bool IsInScreen(glm::vec2 pos);
+	void HandleCollisions();
 };
 
 #endif
