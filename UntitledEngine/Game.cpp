@@ -57,6 +57,19 @@ void Game::Init()
 void Game::Update(GLfloat dt)
 {
 	printf("FPS: %f\n", 1.0f / dt);
+	if ((scene->basicBackGround->position - scene->cameraPosition).x + 32 > 32) {
+		scene->basicBackGround->position.x -= 32;
+	}
+	if ((scene->basicBackGround->position - scene->cameraPosition).x + 32 < -32) {
+		scene->basicBackGround->position.x += 32;
+	}
+	if ((scene->basicBackGround->position - scene->cameraPosition).y + 32 > 32) {
+		scene->basicBackGround->position.y -= 32;
+	}
+	if ((scene->basicBackGround->position - scene->cameraPosition).y + 32 < -32) {
+		scene->basicBackGround->position.y += 32;
+	}
+
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		if (!scene->playerBullets[i]->destroyed) {
 			scene->playerBullets[i]->Update(dt);
@@ -118,11 +131,7 @@ void Game::ProcessInput(GLfloat dt)
 
 void Game::Render()
 {
-	for (int i = 0; i < scene->backgrounds.size(); i++) {
-		if (IsInScreen(scene->backgrounds[i]->position)) {
-			scene->backgrounds[i]->Draw(*Renderer, scene->cameraPosition);
-		}
-	}
+	scene->basicBackGround->Draw(*Renderer, scene->cameraPosition);
 
 	for (int i = 0; i < scene->obstacles.size(); i++) {
 		if (IsInScreen(scene->obstacles[i]->position)) {

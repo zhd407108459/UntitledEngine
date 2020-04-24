@@ -10,12 +10,7 @@ void Scene::CreateDefaultScene()
 
 	Texture2D backgroundTexture;
 	backgroundTexture = ResourceManager::GetTexture("Background");
-	for (int i = sceneStartPosition.x; i <= sceneEndPosition.x; i += 32) {
-		for (int j = sceneStartPosition.y; j <= sceneEndPosition.y; j += 32) {
-			GameObject* bg = new GameObject(glm::vec2(i, j), glm::vec2(32, 32), backgroundTexture, glm::vec3(1.0f));
-			backgrounds.push_back(bg);
-		}
-	}
+	basicBackGround = new GameObject(cameraPosition, glm::vec2(1344, 784), backgroundTexture, glm::vec3(1.0f));
 
 	Texture2D ironTileTexture;
 	ironTileTexture = ResourceManager::GetTexture("IronTile"); 

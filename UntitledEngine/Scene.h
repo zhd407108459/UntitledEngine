@@ -16,6 +16,8 @@ public:
 
 	GameObject* player;
 
+	GameObject* basicBackGround;
+
 	std::vector<GameObject*> backgrounds;
 	std::vector<GameObject*> playerBullets;
 	std::vector<GameObject*> enemyBullets;
