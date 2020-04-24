@@ -13,7 +13,7 @@ using namespace Physics;
 enum GameState {
 	GAME_ACTIVE,
 	GAME_MENU,
-	GAME_WIN
+	GAME_END
 };
 
 // Game holds all game-related state and functionality.

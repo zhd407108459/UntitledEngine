@@ -15,6 +15,8 @@ bool Physics::IsOverlapping(BoxCollider c1, BoxCollider c2)
 	points2[1] = glm::vec3(c2.gameObject->position.x + c2.GetSize().x / 2, c2.gameObject->position.y - c2.GetSize().y / 2, 1);
 	points2[2] = glm::vec3(c2.gameObject->position.x - c2.GetSize().x / 2, c2.gameObject->position.y - c2.GetSize().y / 2, 1);
 	points2[3] = glm::vec3(c2.gameObject->position.x - c2.GetSize().x / 2, c2.gameObject->position.y + c2.GetSize().y / 2, 1);
+	glm::vec3 or1, or2;
+
 
 	for (int i = 0; i < 4; i++) {
 		points1[i] -= glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
@@ -23,14 +25,21 @@ bool Physics::IsOverlapping(BoxCollider c1, BoxCollider c2)
 		points2[i] = c2.GetRotateMatrix() * points2[i];
 		points1[i] += glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
 		points2[i] += glm::vec3(c2.gameObject->position.x, c2.gameObject->position.y, 0);
-		glm::vec3 or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
-		glm::vec3 or2 = glm::vec3(c2.GetOffset().x, c2.GetOffset().y, 1);
+		or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
+		or2 = glm::vec3(c2.GetOffset().x, c2.GetOffset().y, 1);
 		or1 = c1.GetRotateMatrix() * or1;
 		or2 = c2.GetRotateMatrix() * or2;
 
 		points1[i] += or1;
 		points2[i] += or2;
 	}
+
+	float distance = PointToPointDistance(c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y, c2.gameObject->position.x + or2.x, c2.gameObject->position.y + or2.y);
+	float maxDis = PointToPointDistance(points1[0].x, points1[0].y, c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y) + PointToPointDistance(points2[0].x, points2[0].y, c2.gameObject->position.x + or2.x, c2.gameObject->position.y + or2.y);
+	if (distance > maxDis) {
+		return false;
+	}
+
 	std::vector<glm::vec2> ress;
 	bool flag = false;
 	for (int i = 0; i < 4; i++) {
@@ -88,11 +97,12 @@ bool Physics::IsOverlapping(BoxCollider c1, CircleCollider c2)
 	points[1] = glm::vec3(c1.gameObject->position.x + c1.GetSize().x / 2, c1.gameObject->position.y - c1.GetSize().y / 2, 1);
 	points[2] = glm::vec3(c1.gameObject->position.x - c1.GetSize().x / 2, c1.gameObject->position.y - c1.GetSize().y / 2, 1);
 	points[3] = glm::vec3(c1.gameObject->position.x - c1.GetSize().x / 2, c1.gameObject->position.y + c1.GetSize().y / 2, 1);
+	glm::vec3 or1;
 	for (int i = 0; i < 4; i++) {
 		points[i] -= glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
 		points[i] = c1.GetRotateMatrix() * points[i];
 		points[i] += glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
-		glm::vec3 or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
+		or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
 		or1 = c1.GetRotateMatrix() * or1;
 		points[i] += or1;
 		//printf("\nPoint%d:%f,%f\n", i, XMVectorGetX(points[i]), XMVectorGetY(points[i]));
@@ -100,6 +110,12 @@ bool Physics::IsOverlapping(BoxCollider c1, CircleCollider c2)
 	glm::vec3 or2 = glm::vec3(c2.GetOffset().x, c2.GetOffset().y, 1);
 	or2 = c2.GetRotateMatrix() * or2;
 	//printf("\nPoint:%f,%f\n", XMVectorGetX(c2.GetCenter()), XMVectorGetY(c2.GetCenter()));
+	float distance = PointToPointDistance(c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y, c2.gameObject->position.x + or2.x, c2.gameObject->position.y + or2.y);
+	float maxDis = PointToPointDistance(points[0].x, points[0].y, c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y) + c2.GetRadius();
+	if (distance > maxDis) {
+		return false;
+	}
+
 
 	std::vector<glm::vec2> ress;
 	bool flag = false;
@@ -167,7 +183,7 @@ bool Physics::IsOverlapping(BoxCollider c1, BoxCollider c2, glm::vec2& result)
 	points2[1] = glm::vec3(c2.gameObject->position.x + c2.GetSize().x / 2, c2.gameObject->position.y - c2.GetSize().y / 2, 1);
 	points2[2] = glm::vec3(c2.gameObject->position.x - c2.GetSize().x / 2, c2.gameObject->position.y - c2.GetSize().y / 2, 1);
 	points2[3] = glm::vec3(c2.gameObject->position.x - c2.GetSize().x / 2, c2.gameObject->position.y + c2.GetSize().y / 2, 1);
-
+	glm::vec3 or1, or2;
 
 	for (int i = 0; i < 4; i++) {
 		points1[i] -= glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
@@ -176,8 +192,8 @@ bool Physics::IsOverlapping(BoxCollider c1, BoxCollider c2, glm::vec2& result)
 		points2[i] = c2.GetRotateMatrix() * points2[i];
 		points1[i] += glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
 		points2[i] += glm::vec3(c2.gameObject->position.x, c2.gameObject->position.y, 0);
-		glm::vec3 or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
-		glm::vec3 or2 = glm::vec3(c2.GetOffset().x, c2.GetOffset().y, 1);
+		or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
+		or2 = glm::vec3(c2.GetOffset().x, c2.GetOffset().y, 1);
 		or1 = c1.GetRotateMatrix() * or1;
 		or2 = c2.GetRotateMatrix() * or2;
 
@@ -185,6 +201,11 @@ bool Physics::IsOverlapping(BoxCollider c1, BoxCollider c2, glm::vec2& result)
 		points2[i] += or2;
 	}
 
+	float distance = PointToPointDistance(c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y, c2.gameObject->position.x + or2.x, c2.gameObject->position.y + or2.y);
+	float maxDis = PointToPointDistance(points1[0].x, points1[0].y, c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y) + PointToPointDistance(points2[0].x, points2[0].y, c2.gameObject->position.x + or2.x, c2.gameObject->position.y + or2.y);
+	if (distance > maxDis) {
+		return false;
+	}
 
 	std::vector<glm::vec2> ress;
 	bool flag = false;
@@ -253,11 +274,12 @@ bool Physics::IsOverlapping(BoxCollider c1, CircleCollider c2, glm::vec2& result
 	points[1] = glm::vec3(c1.gameObject->position.x + c1.GetSize().x / 2, c1.gameObject->position.y - c1.GetSize().y / 2, 1);
 	points[2] = glm::vec3(c1.gameObject->position.x - c1.GetSize().x / 2, c1.gameObject->position.y - c1.GetSize().y / 2, 1);
 	points[3] = glm::vec3(c1.gameObject->position.x - c1.GetSize().x / 2, c1.gameObject->position.y + c1.GetSize().y / 2, 1);
+	glm::vec3 or1;
 	for (int i = 0; i < 4; i++) {
 		points[i] -= glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
 		points[i] = c1.GetRotateMatrix() * points[i];
 		points[i] += glm::vec3(c1.gameObject->position.x, c1.gameObject->position.y, 0);
-		glm::vec3 or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
+		or1 = glm::vec3(c1.GetOffset().x, c1.GetOffset().y, 1);
 		or1 = c1.GetRotateMatrix() * or1;
 		points[i] += or1;
 		//printf("\nPoint%d:%f,%f\n", i, XMVectorGetX(points[i]), XMVectorGetY(points[i]));
@@ -265,6 +287,12 @@ bool Physics::IsOverlapping(BoxCollider c1, CircleCollider c2, glm::vec2& result
 	glm::vec3 or2 = glm::vec3(c2.GetOffset().x, c2.GetOffset().y, 1);
 	or2 = c2.GetRotateMatrix() * or2;
 	//printf("\nPoint:%f,%f\n", XMVectorGetX(c2.GetCenter()), XMVectorGetY(c2.GetCenter()));
+
+	float distance = PointToPointDistance(c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y, c2.gameObject->position.x + or2.x, c2.gameObject->position.y + or2.y);
+	float maxDis = PointToPointDistance(points[0].x, points[0].y, c1.gameObject->position.x + or1.x, c1.gameObject->position.y + or1.y) + c2.GetRadius();
+	if (distance > maxDis) {
+		return false;
+	}
 
 	std::vector<glm::vec2> ress;
 	bool flag = false;
