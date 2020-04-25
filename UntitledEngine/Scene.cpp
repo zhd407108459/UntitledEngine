@@ -3,15 +3,14 @@
 
 void Scene::CreateDefaultScene()
 {
-	sceneStartPosition = glm::vec2(-1280, -720);
-	sceneEndPosition = glm::vec2(1280, 720);
-
 	cameraPosition = glm::vec2(-640, -360);
 
+	//Generate basic background
 	Texture2D backgroundTexture;
 	backgroundTexture = ResourceManager::GetTexture("Background");
 	basicBackGround = new GameObject(cameraPosition, glm::vec2(1344, 784), backgroundTexture, glm::vec3(1.0f));
 
+	//Generate obstacles
 	Texture2D ironTileTexture;
 	ironTileTexture = ResourceManager::GetTexture("IronTile"); 
 	Texture2D woodTileTexture;
@@ -39,10 +38,11 @@ void Scene::CreateDefaultScene()
 		}
 	}
 
-
+	//Generate enemies and player, and give the, the texture of bullet
 	Texture2D bulletTexture;
 	bulletTexture = ResourceManager::GetTexture("Bullet");
 
+	//Generate enemies
 	Texture2D enemyTexture;
 	enemyTexture = ResourceManager::GetTexture("Enemy");
 	GameObject* enemy1 = new GameObject(glm::vec2(0, 160), glm::vec2(32, 32), enemyTexture, glm::vec3(1.0f));
@@ -51,6 +51,7 @@ void Scene::CreateDefaultScene()
 	enemy1->GetComponent<Enemy>()->bulletTexture = bulletTexture;
 	enemies.push_back(enemy1);
 
+	//Generate player
 	Texture2D playerTexture;
 	playerTexture = ResourceManager::GetTexture("PlayerPistol");
 	player = new GameObject(glm::vec2(0, 0), glm::vec2(32, 32), playerTexture, glm::vec3(1.0f));

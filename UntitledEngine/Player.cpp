@@ -27,6 +27,7 @@ void Player::Update(float deltaTime)
 		facingDirection = moveDirection;
 	}
 	CalculateRotation();
+	//Cooldown Timer
 	if (!isReadyShoot) {
 		coolDownTimer += deltaTime;
 		if (coolDownTimer >= weaponCoolDownIntervel) {

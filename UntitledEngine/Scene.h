@@ -11,9 +11,6 @@ class Scene {
 public:
 	glm::vec2 cameraPosition;
 
-	glm::vec2 sceneStartPosition;
-	glm::vec2 sceneEndPosition;
-
 	GameObject* player;
 
 	GameObject* basicBackGround;

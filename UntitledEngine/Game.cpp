@@ -44,6 +44,7 @@ void Game::Init()
 	myShader = ResourceManager::GetShader("sprite");
 	Renderer = new SpriteRenderer(myShader);
 
+	// Set up the scene
 	scene = new Scene();
 	scene->CreateDefaultScene();
 
@@ -172,6 +173,7 @@ bool Game::IsInScreen(glm::vec2 pos)
 
 void Game::HandleCollisions()
 {
+	//Handle collisions between obstacles and player/enemies
 	for (int i = 0; i < scene->obstacles.size(); i++) {
 		glm::vec2 hitpoint1;
 		bool isOverlapping = IsOverlapping(*(scene->obstacles[i]->GetComponent<BoxCollider>()), *(scene->player->GetComponent<BoxCollider>()), hitpoint1);
@@ -189,7 +191,7 @@ void Game::HandleCollisions()
 			}
 		}
 	}
-
+	//Handle collisions between player and enemies
 	for (int i = 0; i < scene->enemies.size(); i++) {
 		if (scene->enemies[i]->destroyed) {
 			continue;
@@ -200,7 +202,7 @@ void Game::HandleCollisions()
 			HandleCollisionForRigidbody(scene->player->GetComponent<Rigidbody>(), scene->enemies[i]->GetComponent<Rigidbody>(), scene->player->GetComponent<BoxCollider>(), scene->enemies[i]->GetComponent<BoxCollider>(), hitpoint);
 		}
 	}
-
+	//Handle collisions between player's bullets and enemies/obstacles
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		if (!scene->playerBullets[i]->destroyed) {
 			for (int j = 0; j < scene->obstacles.size(); j++) {
