@@ -1,10 +1,13 @@
 #include "Game.h"
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
+#include "XboxInput.h"
+#include <iostream>
 
 
 // Game-related State data
 SpriteRenderer* Renderer;
+XboxInput* Player1;
 
 
 Game::Game(GLuint width, GLuint height)
@@ -57,6 +60,8 @@ void Game::Init()
 	for (int i = 0; i < scene->items.size(); i++) {
 		scene->items[i]->Start();
 	}
+
+	Player1 = new XboxInput(1);
 }
 
 void Game::Update(GLfloat dt)
@@ -111,6 +116,43 @@ void Game::Update(GLfloat dt)
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = scene->playerBullets[i]->position;
 	}
+
+	//Xbox Input
+	if (Player1->IsConnected())
+	{
+		if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
+		{
+			Player1->Vibrate(65535, 0);
+		}
+
+		if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
+		{
+			Player1->Vibrate(0, 65535);
+		}
+
+		if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
+		{
+			Player1->Vibrate(65535, 65535);
+		}
+
+		if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_Y)
+		{
+			Player1->Vibrate();
+		}
+
+		if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
+		{
+			
+		}
+	}
+	else
+	{
+		std::cout << "\n\tERROR! PLAYER 1 - XBOX 360 Controller Not Found!\n";
+		std::cout << "Press Any Key To Exit.";
+		//std::cin.get();
+		
+	}
+
 
 }
 

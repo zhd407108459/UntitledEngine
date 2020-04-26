@@ -37,6 +37,12 @@
     <Filter Include="Header Files\Gameplay">
       <UniqueIdentifier>{5ca94392-8e55-47bd-b8a4-a623856769b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{ca3d4e00-1160-42fa-8012-c7fad9cf7079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{eb909e90-13c1-43e7-b76f-11be883da39b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -87,6 +93,9 @@
     <ClInclude Include="Item.h">
       <Filter>Header Files\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="XboxInput.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -136,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="Item.cpp">
       <Filter>Source Files\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Desktop\新建文件夹 (3)\Input\XboxInput.cpp">
+      <Filter>Source Files\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
