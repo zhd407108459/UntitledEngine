@@ -59,4 +59,11 @@ void Scene::CreateDefaultScene()
 	player->GetComponent<Player>()->scene = this;
 	player->GetComponent<Player>()->bulletTexture = bulletTexture;
 
+	Texture2D itemTexture;
+	itemTexture = ResourceManager::GetTexture("AssaultRifle");
+	GameObject* item1 = new GameObject(glm::vec2(-100, 0), glm::vec2(32, 32), itemTexture, glm::vec3(1.0f));
+	item1->AddComponent<Item>();
+	item1->GetComponent<Item>()->scene = this;
+	items.push_back(item1);
+
 }

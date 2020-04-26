@@ -53,6 +53,10 @@ void Game::Init()
 	}
 
 	scene->player->Start();
+	
+	for (int i = 0; i < scene->items.size(); i++) {
+		scene->items[i]->Start();
+	}
 }
 
 void Game::Update(GLfloat dt)
@@ -88,6 +92,12 @@ void Game::Update(GLfloat dt)
 	for (int i = 0; i < scene->enemies.size(); i++) {
 		if (!scene->enemies[i]->destroyed) {
 			scene->enemies[i]->Update(dt);
+		}
+	}
+
+	for (int i = 0; i < scene->items.size(); i++) {
+		if (!scene->items[i]->destroyed) {
+			scene->items[i]->Update(dt);
 		}
 	}
 
@@ -161,7 +171,11 @@ void Game::Render()
 		}
 	}
 
-	scene->player->Draw(*Renderer, scene->cameraPosition);
+	if (!scene->player->destroyed){
+		scene->player->Draw(*Renderer, scene->cameraPosition);
+	}
+	
+	scene->items[0]->Draw(*Renderer, scene->cameraPosition);
 }
 
 bool Game::IsInScreen(glm::vec2 pos)

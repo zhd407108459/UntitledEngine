@@ -6,6 +6,9 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Item.h"
+
+
 
 class Scene {
 public:
