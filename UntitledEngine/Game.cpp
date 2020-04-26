@@ -3,6 +3,7 @@
 #include "SpriteRenderer.h"
 #include "XboxInput.h"
 #include <iostream>
+#include<math.h>;
 
 
 // Game-related State data
@@ -140,10 +141,12 @@ void Game::Update(GLfloat dt)
 			Player1->Vibrate();
 		}
 
-		if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
+		if (Player1->GetState().Gamepad.bRightTrigger)
 		{
-			
+			scene->player->GetComponent<Player>()->Shoot();
 		}
+
+
 	}
 	else
 	{
@@ -159,7 +162,47 @@ void Game::Update(GLfloat dt)
 
 void Game::ProcessInput(GLfloat dt)
 {
-	if (Keys[87]) {//W
+	
+	if (Player1->GetState().Gamepad.sThumbLX > 5000) {
+		scene->player->GetComponent<Player>()->moveDirection.x = 1;
+	}
+	else if (Player1->GetState().Gamepad.sThumbLX < -5000) {
+		scene->player->GetComponent<Player>()->moveDirection.x = -1;
+	}
+	else {
+		scene->player->GetComponent<Player>()->moveDirection.x = 0;
+	}
+	if (Player1->GetState().Gamepad.sThumbLY > 5000) {
+		scene->player->GetComponent<Player>()->moveDirection.y = -1;
+	}
+	else if (Player1->GetState().Gamepad.sThumbLY < -5000) {
+		scene->player->GetComponent<Player>()->moveDirection.y = 1;
+	}
+	else {
+		scene->player->GetComponent<Player>()->moveDirection.y = 0;
+	}
+
+
+	if (Player1->GetState().Gamepad.sThumbRX > 5000) {
+		scene->player->GetComponent<Player>()->facingDirection.x = 1;
+	}
+	else if (Player1->GetState().Gamepad.sThumbRX < -5000) {
+		scene->player->GetComponent<Player>()->facingDirection.x = -1;
+	}
+	else {
+		scene->player->GetComponent<Player>()->facingDirection.y = 0;
+	}
+	if (Player1->GetState().Gamepad.sThumbRY > 5000) {
+		scene->player->GetComponent<Player>()->facingDirection.y = -1;
+	}
+	else if (Player1->GetState().Gamepad.sThumbRY < -5000) {
+		scene->player->GetComponent<Player>()->facingDirection.y = 1;
+	}
+	else {
+		scene->player->GetComponent<Player>()->facingDirection.y = 0;
+	}
+	
+	/*if (Keys[87]) {//W
 		scene->player->GetComponent<Player>()->moveDirection.y = -1;
 	}
 	else if (Keys[83]) {//S
@@ -180,7 +223,7 @@ void Game::ProcessInput(GLfloat dt)
 
 	if (Keys[32]) {//Space
 		scene->player->GetComponent<Player>()->Shoot();
-	}
+	}*/
 
 	if (Keys[84]) {//T
 		Restart();

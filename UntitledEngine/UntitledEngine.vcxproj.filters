@@ -146,7 +146,7 @@
     <ClCompile Include="Item.cpp">
       <Filter>Source Files\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Desktop\新建文件夹 (3)\Input\XboxInput.cpp">
+    <ClCompile Include="XboxInput.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
   </ItemGroup>
