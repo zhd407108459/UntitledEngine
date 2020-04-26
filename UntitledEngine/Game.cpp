@@ -100,8 +100,10 @@ void Game::Update(GLfloat dt)
 			scene->items[i]->Update(dt);
 		}
 	}
+	if (!scene->player->destroyed) {
+		scene->player->Update(dt);
+	}
 
-	scene->player->Update(dt);
 	scene->cameraPosition = scene->player->position + glm::vec2(-624, -344);
 
 	HandleCollisions();
@@ -174,8 +176,13 @@ void Game::Render()
 	if (!scene->player->destroyed){
 		scene->player->Draw(*Renderer, scene->cameraPosition);
 	}
-	
-	scene->items[0]->Draw(*Renderer, scene->cameraPosition);
+	for (int i = 0; i < scene->items.size(); i++) {
+		if (!scene->items[i]->destroyed) {
+			scene->items[i]->Draw(*Renderer, scene->cameraPosition);
+		}
+			
+	}
+
 }
 
 bool Game::IsInScreen(glm::vec2 pos)
@@ -287,7 +294,19 @@ void Game::HandleCollisions()
 			}
 		}
 
-	}	
+	}
+	//handle collisions between items and players
+	for (int i = 0; i < scene->items.size(); i++) {
+		if (!scene->items[i]->destroyed) {
+			glm::vec2 hitpoint;
+			bool isOverlapping = IsOverlapping(*(scene->items[i]->GetComponent<BoxCollider>()), *(scene->player->GetComponent<BoxCollider>()), hitpoint);
+			if (isOverlapping) {
+				scene->items[i]->destroyed = true;
+				scene->player->GetComponent<Player>()->weaponCoolDownIntervel = 0.2f;
+			}
+		}
+	}
+
 }
 
 void Game::Restart()
