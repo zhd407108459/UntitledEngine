@@ -23,7 +23,15 @@ public:
 
 	float weaponCoolDownIntervel;
 
+	float visionRange;
+
+	float partrolDistance;
+
 	bool isReadyShoot;
+
+	bool isMoveRight;
+
+	bool isAttack;
 
 	void Start();
 
@@ -32,6 +40,8 @@ public:
 	void CalculateRotation();
 
 	void Shoot();
+
+	void Patrol();
 
 private:
 	float coolDownTimer;

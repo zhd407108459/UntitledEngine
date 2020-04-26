@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Scene.h"
 #include "Bullet.h"
+#include <math.h>
 
 #define M_PI 3.14159265358979323846
 
@@ -18,6 +19,10 @@ void Enemy::Start()
 	this->gameObject->GetComponent<Enemy>()->shootVelocity = 160;
 	this->gameObject->GetComponent<Enemy>()->isReadyShoot = true;
 	this->gameObject->GetComponent<Enemy>()->weaponCoolDownIntervel = 0.4f;
+	this->gameObject->GetComponent<Enemy>()->visionRange = 100.0f;
+	this->gameObject->GetComponent<Enemy>()->partrolDistance = 10.0f;
+	this->gameObject->GetComponent<Enemy>()->isMoveRight = true;
+	this->gameObject->GetComponent<Enemy>()->isAttack = true;
 }
 
 void Enemy::Update(float deltaTime)
@@ -35,6 +40,8 @@ void Enemy::Update(float deltaTime)
 			isReadyShoot = true;
 		}
 	}
+
+	Patrol();
 }
 
 void Enemy::CalculateRotation()
@@ -53,6 +60,7 @@ void Enemy::CalculateRotation()
 		angle = -angle;
 	}
 	this->gameObject->rotation = angle;
+
 }
 
 void Enemy::Shoot()
@@ -81,4 +89,32 @@ void Enemy::Shoot()
 		scene->enemyBullets.push_back(bullet);
 	}
 	isReadyShoot = false;
+}
+
+void Enemy::Patrol()
+{
+	double d;
+	d = sqrt(pow(scene->player->position.x - scene->enemies[0]->position.x, 2)+pow(scene->player->position.y - scene->enemies[0]->position.y,2));
+	if (d>visionRange) {
+		if (isMoveRight) {
+			moveDirection.x = 1;
+		}
+		else {
+			moveDirection.x = -1;
+		}
+
+		if (scene->enemies[0]->position.x > 100) {
+			isMoveRight = false;
+		}
+		else if (scene->enemies[0]->position.x < 0) {
+			isMoveRight = true;
+		}
+	}
+	else {
+		moveDirection.x = 0;
+		facingDirection.x = scene->player->position.x - scene->enemies[0]->position.x;
+		facingDirection.y = scene->player->position.y - scene->enemies[0]->position.y;
+		Shoot();
+
+	}
 }

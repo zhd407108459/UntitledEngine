@@ -57,7 +57,9 @@ void Game::Init()
 
 void Game::Update(GLfloat dt)
 {
-	printf("FPS: %f\n", 1.0f / dt);
+	//printf("FPS: %f\n", 1.0f / dt);
+	//printf("%f\n",scene->enemies[0]->position.x);
+
 	if ((scene->basicBackGround->position - scene->cameraPosition).x + 32 > 32) {
 		scene->basicBackGround->position.x -= 32;
 	}
@@ -97,6 +99,7 @@ void Game::Update(GLfloat dt)
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = scene->playerBullets[i]->position;
 	}
+
 }
 
 
@@ -236,6 +239,41 @@ void Game::HandleCollisions()
 		}
 		
 	}
+	//handle collisions between enemies' bullets and players/obstacles
+	for (int i = 0; i < scene->enemyBullets.size(); i++) {
+		if (!scene->enemyBullets[i]->destroyed) {
+			for (int j = 0; j < scene->obstacles.size(); j++) {
+				HitInfo hit;
+				Line line;
+				line.startPoint = scene->enemyBullets[i]->GetComponent<Bullet>()->lastPosition;
+				line.endPoint = scene->enemyBullets[i]->position;
+				bool isIntersecting = LinecastCollider(line, *(scene->obstacles[j]->GetComponent<BoxCollider>()), hit);
+				if (isIntersecting) {
+					scene->enemyBullets[i]->destroyed = true;
+					break;
+				}
+			}
+		}
+		if (!scene->enemyBullets[i]->destroyed) {
+			for (int j = 0; j < scene->enemies.size(); j++) {
+				/*if (scene->player->destroyed) {
+					continue;
+				}*/
+				HitInfo hit;
+				Line line;
+				line.startPoint = scene->enemyBullets[i]->GetComponent<Bullet>()->lastPosition;
+				line.endPoint = scene->enemyBullets[i]->position;
+				bool isIntersecting = LinecastCollider(line, *(scene->player->GetComponent<BoxCollider>()), hit);
+				if (isIntersecting) {
+					printf("HIT");
+					scene->enemyBullets[i]->destroyed = true;
+					scene->player->destroyed = true;
+					break;
+				}
+			}
+		}
+
+	}	
 }
 
 void Game::Restart()
