@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{eb909e90-13c1-43e7-b76f-11be883da39b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\FileSystem">
+      <UniqueIdentifier>{11b2d75f-a3da-47f8-92f1-a50751aad771}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

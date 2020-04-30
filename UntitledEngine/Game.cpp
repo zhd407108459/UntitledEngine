@@ -163,71 +163,74 @@ void Game::Update(GLfloat dt)
 
 void Game::ProcessInput(GLfloat dt)
 {
+	if (Player1->IsConnected()) {
+		if (Player1->GetState().Gamepad.sThumbLX > 5000) {
+			scene->player->GetComponent<Player>()->moveDirection.x = Player1->GetState().Gamepad.sThumbLX;
+		}
+		else if (Player1->GetState().Gamepad.sThumbLX < -5000) {
+			scene->player->GetComponent<Player>()->moveDirection.x = Player1->GetState().Gamepad.sThumbLX;
+		}
+		else {
+			scene->player->GetComponent<Player>()->moveDirection.x = 0;
+		}
+		if (Player1->GetState().Gamepad.sThumbLY > 5000) {
+			scene->player->GetComponent<Player>()->moveDirection.y = -Player1->GetState().Gamepad.sThumbLY;
+		}
+		else if (Player1->GetState().Gamepad.sThumbLY < -5000) {
+			scene->player->GetComponent<Player>()->moveDirection.y = -Player1->GetState().Gamepad.sThumbLY;
+		}
+		else {
+			scene->player->GetComponent<Player>()->moveDirection.y = 0;
+		}
+
+
+		if (Player1->GetState().Gamepad.sThumbRX > 3000) {
+			scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
+		}
+		else if (Player1->GetState().Gamepad.sThumbRX < -3000) {
+			scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
+		}
+		else {
+			//scene->player->GetComponent<Player>()->facingDirection.y = 0;
+		}
+		if (Player1->GetState().Gamepad.sThumbRY > 3000) {
+			scene->player->GetComponent<Player>()->facingDirection.y = -Player1->GetState().Gamepad.sThumbRY;
+		}
+		else if (Player1->GetState().Gamepad.sThumbRY < -3000) {
+			scene->player->GetComponent<Player>()->facingDirection.y = -Player1->GetState().Gamepad.sThumbRY;
+		}
+		else {
+			//scene->player->GetComponent<Player>()->facingDirection.y = 0;
+		}
+	}
 	
-	if (Player1->GetState().Gamepad.sThumbLX > 5000) {
-		scene->player->GetComponent<Player>()->moveDirection.x = Player1->GetState().Gamepad.sThumbLX;
-	}
-	else if (Player1->GetState().Gamepad.sThumbLX < -5000) {
-		scene->player->GetComponent<Player>()->moveDirection.x = Player1->GetState().Gamepad.sThumbLX;
-	}
 	else {
-		scene->player->GetComponent<Player>()->moveDirection.x = 0;
-	}
-	if (Player1->GetState().Gamepad.sThumbLY > 5000) {
-		scene->player->GetComponent<Player>()->moveDirection.y = -Player1->GetState().Gamepad.sThumbLY;
-	}
-	else if (Player1->GetState().Gamepad.sThumbLY < -5000) {
-		scene->player->GetComponent<Player>()->moveDirection.y = -Player1->GetState().Gamepad.sThumbLY;
-	}
-	else {
-		scene->player->GetComponent<Player>()->moveDirection.y = 0;
-	}
+		if (Keys[87]) {//W
+			scene->player->GetComponent<Player>()->moveDirection.y = -1;
+		}
+		else if (Keys[83]) {//S
+			scene->player->GetComponent<Player>()->moveDirection.y = 1;
+		}
+		else {
+			scene->player->GetComponent<Player>()->moveDirection.y = 0;
+		}
+		if (Keys[65]) {//A
+			scene->player->GetComponent<Player>()->moveDirection.x = -1;
+		}
+		else if (Keys[68]) {//D
+			scene->player->GetComponent<Player>()->moveDirection.x = 1;
+		}
+		else {
+			scene->player->GetComponent<Player>()->moveDirection.x = 0;
+		}
 
+		if (Keys[32]) {//Space
+			scene->player->GetComponent<Player>()->Shoot();
+		}
 
-	if (Player1->GetState().Gamepad.sThumbRX > 3000) {
-		scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
-	}
-	else if (Player1->GetState().Gamepad.sThumbRX < -3000) {
-		scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
-	}
-	else {
-		//scene->player->GetComponent<Player>()->facingDirection.y = 0;
-	}
-	if (Player1->GetState().Gamepad.sThumbRY > 3000) {
-		scene->player->GetComponent<Player>()->facingDirection.y = -Player1->GetState().Gamepad.sThumbRY;
-	}
-	else if (Player1->GetState().Gamepad.sThumbRY < -3000) {
-		scene->player->GetComponent<Player>()->facingDirection.y = - Player1->GetState().Gamepad.sThumbRY;
-	}
-	else {
-		//scene->player->GetComponent<Player>()->facingDirection.y = 0;
-	}
-	
-	/*if (Keys[87]) {//W
-		scene->player->GetComponent<Player>()->moveDirection.y = -1;
-	}
-	else if (Keys[83]) {//S
-		scene->player->GetComponent<Player>()->moveDirection.y = 1;
-	}
-	else {
-		scene->player->GetComponent<Player>()->moveDirection.y = 0;
-	}
-	if (Keys[65]) {//A
-		scene->player->GetComponent<Player>()->moveDirection.x = -1;
-	}
-	else if (Keys[68]) {//D
-		scene->player->GetComponent<Player>()->moveDirection.x = 1;
-	}
-	else {
-		scene->player->GetComponent<Player>()->moveDirection.x = 0;
-	}
-
-	if (Keys[32]) {//Space
-		scene->player->GetComponent<Player>()->Shoot();
-	}*/
-
-	if (Keys[84]) {//T
-		Restart();
+			if (Keys[84]) {//T
+				Restart();
+			}
 	}
 }
 
@@ -389,7 +392,18 @@ void Game::HandleCollisions()
 			bool isOverlapping = IsOverlapping(*(scene->items[i]->GetComponent<BoxCollider>()), *(scene->player->GetComponent<BoxCollider>()), hitpoint);
 			if (isOverlapping) {
 				scene->items[i]->destroyed = true;
-				scene->player->GetComponent<Player>()->weaponCoolDownIntervel = 0.2f;
+				if (i==0) {
+					scene->player->GetComponent<Player>()->weaponCoolDownIntervel = 0.2f;
+					scene->player->GetComponent<Player>()->remainAmmo = 30;
+				}
+				if (i==1) {
+					scene->player->GetComponent<Player>()->weaponCoolDownIntervel = 0.4f;
+					scene->player->GetComponent<Player>()->remainAmmo = 10;
+				}
+				if (i == 2) {
+					scene->player->GetComponent<Player>()->remainAmmo = 30;
+				}
+
 			}
 		}
 	}

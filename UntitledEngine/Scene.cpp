@@ -66,4 +66,18 @@ void Scene::CreateDefaultScene()
 	item1->GetComponent<Item>()->scene = this;
 	items.push_back(item1);
 
+	Texture2D itemTexture1;
+	itemTexture = ResourceManager::GetTexture("Pistol");
+	GameObject* item2 = new GameObject(glm::vec2(100, 0), glm::vec2(32, 32), itemTexture, glm::vec3(1.0f));
+	item2->AddComponent<Item>();
+	item2->GetComponent<Item>()->scene = this;
+	items.push_back(item2);
+
+	Texture2D itemTexture2;
+	itemTexture = ResourceManager::GetTexture("AmmoSupply");
+	GameObject* item3 = new GameObject(glm::vec2(100, 100), glm::vec2(32, 32), itemTexture, glm::vec3(1.0f));
+	item3->AddComponent<Item>();
+	item3->GetComponent<Item>()->scene = this;
+	items.push_back(item3);
+
 }

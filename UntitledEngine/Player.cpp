@@ -1,8 +1,10 @@
 #include "Player.h"
 #include "Scene.h"
 #include "Bullet.h"
+#include "XboxInput.h"
 
 #define M_PI 3.14159265358979323846
+
 
 void Player::Start()
 {
@@ -18,12 +20,13 @@ void Player::Start()
 	this->gameObject->GetComponent<Player>()->shootVelocity = 160;
 	this->gameObject->GetComponent<Player>()->isReadyShoot = true;
 	this->gameObject->GetComponent<Player>()->weaponCoolDownIntervel = 0.4f;
+	this->gameObject->GetComponent<Player>()->remainAmmo = 10;
 }
 
 void Player::Update(float deltaTime)
 {
 	this->gameObject->GetComponent<Rigidbody>()->velocity = moveSpeed * glm::normalize(moveDirection);
-	if (moveDirection.x != 0 || moveDirection.y != 0) {
+	if ((moveDirection.x != 0 || moveDirection.y != 0)) {
 		//facingDirection = moveDirection;
 	}
 	CalculateRotation();
@@ -58,7 +61,7 @@ void Player::CalculateRotation()
 
 void Player::Shoot()
 {
-	if (!isReadyShoot) {
+	if (!isReadyShoot||remainAmmo==0) {
 		return;
 	}
 	bool isFoundUsedBullet = false;
@@ -68,6 +71,7 @@ void Player::Shoot()
 			scene->playerBullets[i]->position = this->gameObject->position;
 			scene->playerBullets[i]->GetComponent<Rigidbody>()->velocity = glm::normalize(facingDirection) * shootVelocity;
 			scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = this->gameObject->position;
+			remainAmmo--;
 			isFoundUsedBullet = true;
 			break;
 		}
