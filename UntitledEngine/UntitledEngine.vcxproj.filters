@@ -46,6 +46,9 @@
     <Filter Include="Source Files\FileSystem">
       <UniqueIdentifier>{11b2d75f-a3da-47f8-92f1-a50751aad771}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Json">
+      <UniqueIdentifier>{4993c409-da46-4d7b-bda8-357235c6c7cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -99,6 +102,9 @@
     <ClInclude Include="XboxInput.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="LoadScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -151,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="XboxInput.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadFile.cpp">
+      <Filter>Source Files\Json</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

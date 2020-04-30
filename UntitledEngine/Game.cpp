@@ -4,6 +4,7 @@
 #include "XboxInput.h"
 #include <iostream>
 #include<math.h>;
+#include"LoadScene.h"
 
 
 // Game-related State data
@@ -65,6 +66,7 @@ void Game::Init()
 	}
 
 	Player1 = new XboxInput(1);
+	//readFileJson();
 }
 
 void Game::Update(GLfloat dt)
@@ -208,6 +210,10 @@ void Game::ProcessInput(GLfloat dt)
 		else {
 			//scene->player->GetComponent<Player>()->facingDirection.y = 0;
 		}
+
+		/*if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START) {
+			Restart();
+		}*/
 	}
 	
 	else {
