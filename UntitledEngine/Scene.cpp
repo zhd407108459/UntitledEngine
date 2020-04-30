@@ -10,6 +10,8 @@ void Scene::CreateDefaultScene()
 	backgroundTexture = ResourceManager::GetTexture("Background");
 	basicBackGround = new GameObject(cameraPosition, glm::vec2(1344, 784), backgroundTexture, glm::vec3(1.0f));
 
+
+
 	//Generate obstacles
 	Texture2D ironTileTexture;
 	ironTileTexture = ResourceManager::GetTexture("IronTile"); 
@@ -79,5 +81,13 @@ void Scene::CreateDefaultScene()
 	item3->AddComponent<Item>();
 	item3->GetComponent<Item>()->scene = this;
 	items.push_back(item3);
+
+	Texture2D winTexture;
+	winTexture = ResourceManager::GetTexture("Win");
+	win = new GameObject(cameraPosition, glm::vec2(1440, 860), winTexture, glm::vec3(1.0f));
+
+	Texture2D loseTexture;
+	loseTexture = ResourceManager::GetTexture("Lose");
+	lose = new GameObject(cameraPosition, glm::vec2(1440, 860), loseTexture, glm::vec3(1.0f));
 
 }

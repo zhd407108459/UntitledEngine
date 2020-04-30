@@ -43,6 +43,8 @@ void Game::Init()
 	ResourceManager::LoadTexture("textures/AssaultRifle.png", GL_TRUE, "AssaultRifle");
 	ResourceManager::LoadTexture("textures/Pistol.png", GL_TRUE, "Pistol");
 	ResourceManager::LoadTexture("textures/Square.png", GL_TRUE, "Square");
+	ResourceManager::LoadTexture("textures/Win.png", GL_TRUE, "Win");
+	ResourceManager::LoadTexture("textures/Lose.png", GL_TRUE, "Lose");
 	// Set render-specific controls
 	Shader myShader;
 	myShader = ResourceManager::GetShader("sprite");
@@ -70,6 +72,7 @@ void Game::Update(GLfloat dt)
 	//printf("FPS: %f\n", 1.0f / dt);
 	//printf("%f\n",scene->enemies[0]->position.x);
 	//printf("%f\n", scene->player->GetComponent<Player>()->facingDirection.x);
+	printf("%d\n",scene->enemies.size());
 
 	if ((scene->basicBackGround->position - scene->cameraPosition).x + 32 > 32) {
 		scene->basicBackGround->position.x -= 32;
@@ -118,7 +121,7 @@ void Game::Update(GLfloat dt)
 	
 
 	//Xbox Input
-	if (Player1->IsConnected())
+	/*if (Player1->IsConnected())
 	{
 		if (Player1->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
 		{
@@ -140,10 +143,7 @@ void Game::Update(GLfloat dt)
 			Player1->Vibrate();
 		}
 
-		if (Player1->GetState().Gamepad.bRightTrigger)
-		{
-			scene->player->GetComponent<Player>()->Shoot();
-		}
+
 
 	}
 	else
@@ -152,7 +152,7 @@ void Game::Update(GLfloat dt)
 		std::cout << "Press Any Key To Exit.";
 		//std::cin.get();
 		
-	}
+	}*/
 
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = scene->playerBullets[i]->position;
@@ -164,6 +164,12 @@ void Game::Update(GLfloat dt)
 void Game::ProcessInput(GLfloat dt)
 {
 	if (Player1->IsConnected()) {
+		
+		if (Player1->GetState().Gamepad.bRightTrigger)
+		{
+			scene->player->GetComponent<Player>()->Shoot();
+		}
+		
 		if (Player1->GetState().Gamepad.sThumbLX > 5000) {
 			scene->player->GetComponent<Player>()->moveDirection.x = Player1->GetState().Gamepad.sThumbLX;
 		}
@@ -264,12 +270,21 @@ void Game::Render()
 
 	if (!scene->player->destroyed){
 		scene->player->Draw(*Renderer, scene->cameraPosition);
+		
 	}
 	for (int i = 0; i < scene->items.size(); i++) {
 		if (!scene->items[i]->destroyed) {
 			scene->items[i]->Draw(*Renderer, scene->cameraPosition);
 		}
 			
+	}
+	if (scene->player->destroyed) {
+		scene->lose->Draw(*Renderer, scene->cameraPosition);
+	}
+
+	if (scene->enemies.size() ==0) {
+		scene->win->Draw(*Renderer, scene->cameraPosition);
+		scene->player->destroyed=true;
 	}
 
 }
@@ -344,6 +359,7 @@ void Game::HandleCollisions()
 				if (isIntersecting) {
 					scene->playerBullets[i]->destroyed = true;
 					scene->enemies[j]->destroyed = true;
+					scene->enemies.erase(scene->enemies.begin()+j);
 					break;
 				}
 			}
