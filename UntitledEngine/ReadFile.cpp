@@ -11,7 +11,8 @@ using namespace std;
 
 /*void readFileJson()
 {
-	Json::Reader reader;
+	JSONCPP_STRING err;
+	//Json::Reader reader;
 	Json::Value root;
 	
 	
@@ -20,6 +21,8 @@ using namespace std;
 	ifstream in("test.json", ios::binary);
 	//in.open("test.json", ios::binary);
 	string rawJson = "in";
+	const auto rawJsonLength = static_cast<int>(rawJson.length());
+
 	Json::CharReaderBuilder builder;
 	const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
 
@@ -30,7 +33,7 @@ using namespace std;
 	}
 
 
-	if (reader.parse(in, root))
+	if (reader->parse(rawJson.c_str(), rawJson.c_str() + rawJsonLength, &root,&err))
 	{
 
 		string name = root["name"].asString();
