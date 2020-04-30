@@ -69,7 +69,7 @@ void Game::Update(GLfloat dt)
 {
 	//printf("FPS: %f\n", 1.0f / dt);
 	//printf("%f\n",scene->enemies[0]->position.x);
-	printf("%f\n", scene->player->GetComponent<Player>()->facingDirection.x);
+	//printf("%f\n", scene->player->GetComponent<Player>()->facingDirection.x);
 
 	if ((scene->basicBackGround->position - scene->cameraPosition).x + 32 > 32) {
 		scene->basicBackGround->position.x -= 32;
@@ -115,9 +115,7 @@ void Game::Update(GLfloat dt)
 
 	HandleCollisions();
 
-	for (int i = 0; i < scene->playerBullets.size(); i++) {
-		scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = scene->playerBullets[i]->position;
-	}
+	
 
 	//Xbox Input
 	if (Player1->IsConnected())
@@ -147,7 +145,6 @@ void Game::Update(GLfloat dt)
 			scene->player->GetComponent<Player>()->Shoot();
 		}
 
-
 	}
 	else
 	{
@@ -157,6 +154,9 @@ void Game::Update(GLfloat dt)
 		
 	}
 
+	for (int i = 0; i < scene->playerBullets.size(); i++) {
+		scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = scene->playerBullets[i]->position;
+	}
 
 }
 
@@ -188,7 +188,7 @@ void Game::ProcessInput(GLfloat dt)
 		scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
 	}
 	else if (Player1->GetState().Gamepad.sThumbRX < -3000) {
-		scene->player->GetComponent<Player>()->facingDirection.x = -Player1->GetState().Gamepad.sThumbRX;
+		scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
 	}
 	else {
 		//scene->player->GetComponent<Player>()->facingDirection.y = 0;
@@ -322,6 +322,7 @@ void Game::HandleCollisions()
 				line.endPoint = scene->playerBullets[i]->position;
 				bool isIntersecting = LinecastCollider(line, *(scene->obstacles[j]->GetComponent<BoxCollider>()), hit);
 				if (isIntersecting) {
+					//printf("HIT\n");
 					scene->playerBullets[i]->destroyed = true;
 					break;
 				}

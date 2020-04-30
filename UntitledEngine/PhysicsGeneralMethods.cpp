@@ -1060,9 +1060,17 @@ bool Physics::LinecastCollider(Line line, BoxCollider targetCollider, HitInfo& r
 				isHitted = true;
 				ress.push_back(r);
 			}
+			else if (IsTwoLineIntersecting(glm::vec2(points[i].x, points[i].y), glm::vec2(points[i + 1].x, points[i + 1].y), line.startPoint, line.endPoint, r)) {
+				isHitted = true;
+				ress.push_back(r);
+			}
 		}
 		else {
 			if (IsTwoLineIntersecting(line.startPoint, line.endPoint, glm::vec2(points[i].x, points[i].y), glm::vec2(points[0].x, points[0].y), r)) {
+				isHitted = true;
+				ress.push_back(r);
+			}
+			else if (IsTwoLineIntersecting(glm::vec2(points[i].x, points[i].y), glm::vec2(points[0].x, points[0].y), line.startPoint, line.endPoint, r)) {
 				isHitted = true;
 				ress.push_back(r);
 			}
