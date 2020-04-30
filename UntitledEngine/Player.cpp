@@ -24,7 +24,7 @@ void Player::Update(float deltaTime)
 {
 	this->gameObject->GetComponent<Rigidbody>()->velocity = moveSpeed * glm::normalize(moveDirection);
 	if (moveDirection.x != 0 || moveDirection.y != 0) {
-		facingDirection = moveDirection;
+		//facingDirection = moveDirection;
 	}
 	CalculateRotation();
 	//Cooldown Timer
