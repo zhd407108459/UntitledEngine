@@ -243,25 +243,31 @@ void Game::ProcessInput(GLfloat dt)
 	}
 	if (Keys[87]) {//W
 		scene->player->GetComponent<Player>()->moveDirection.y = -1;
+		isMYZ = false;
 	}
 	else if (Keys[83]) {//S
 		scene->player->GetComponent<Player>()->moveDirection.y = 1;
+		isMYZ = false;
 	}
 	else{
-		if (!Player1->IsConnected() || isMYZ)
+		if (!Player1->IsConnected() || isMYZ) {
 			scene->player->GetComponent<Player>()->moveDirection.y = 0;
+		}
 	}
 	if (Keys[65]) {//A
 		scene->player->GetComponent<Player>()->moveDirection.x = -1;
+		isMXZ = false;
 	}
 	else if (Keys[68]) {//D
 		scene->player->GetComponent<Player>()->moveDirection.x = 1;
+		isMXZ = false;
 	}
 	else {
-		if (!Player1->IsConnected() || isMXZ)
+		if (!Player1->IsConnected() || isMXZ) {
 			scene->player->GetComponent<Player>()->moveDirection.x = 0;
+		}
 	}
-	if (isFYZ && isFXZ) {
+	if (isFYZ && isFXZ && (!isMXZ || !isMYZ)) {
 		scene->player->GetComponent<Player>()->facingDirection = scene->player->GetComponent<Player>()->moveDirection;
 	}
 	if (Keys[32]) {//Space
