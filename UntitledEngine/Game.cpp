@@ -72,7 +72,7 @@ void Game::Update(GLfloat dt)
 	//printf("FPS: %f\n", 1.0f / dt);
 	//printf("%f\n",scene->enemies[0]->position.x);
 	//printf("%f\n", scene->player->GetComponent<Player>()->facingDirection.x);
-	printf("%d\n",scene->enemies.size());
+	//printf("%d\n",scene->enemies.size());
 
 	if ((scene->basicBackGround->position - scene->cameraPosition).x + 32 > 32) {
 		scene->basicBackGround->position.x -= 32;
@@ -157,12 +157,15 @@ void Game::Update(GLfloat dt)
 	for (int i = 0; i < scene->playerBullets.size(); i++) {
 		scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = scene->playerBullets[i]->position;
 	}
-
+	for (int i = 0; i < scene->enemyBullets.size(); i++) {
+		scene->enemyBullets[i]->GetComponent<Bullet>()->lastPosition = scene->enemyBullets[i]->position;
+	}
 }
 
 
 void Game::ProcessInput(GLfloat dt)
 {
+	bool isMYZ = false, isMXZ = false, isFYZ = false, isFXZ = false;
 	if (Player1->IsConnected()) {
 		
 		if (Player1->GetState().Gamepad.bRightTrigger)
@@ -178,6 +181,7 @@ void Game::ProcessInput(GLfloat dt)
 		}
 		else {
 			scene->player->GetComponent<Player>()->moveDirection.x = 0;
+			isMXZ = true;
 		}
 		if (Player1->GetState().Gamepad.sThumbLY > 5000) {
 			scene->player->GetComponent<Player>()->moveDirection.y = -Player1->GetState().Gamepad.sThumbLY;
@@ -187,8 +191,8 @@ void Game::ProcessInput(GLfloat dt)
 		}
 		else {
 			scene->player->GetComponent<Player>()->moveDirection.y = 0;
+			isMYZ = true;
 		}
-
 
 		if (Player1->GetState().Gamepad.sThumbRX > 3000) {
 			scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
@@ -197,6 +201,7 @@ void Game::ProcessInput(GLfloat dt)
 			scene->player->GetComponent<Player>()->facingDirection.x = Player1->GetState().Gamepad.sThumbRX;
 		}
 		else {
+			isFYZ = true;
 			//scene->player->GetComponent<Player>()->facingDirection.y = 0;
 		}
 		if (Player1->GetState().Gamepad.sThumbRY > 3000) {
@@ -206,37 +211,43 @@ void Game::ProcessInput(GLfloat dt)
 			scene->player->GetComponent<Player>()->facingDirection.y = -Player1->GetState().Gamepad.sThumbRY;
 		}
 		else {
+			isFXZ = true;
 			//scene->player->GetComponent<Player>()->facingDirection.y = 0;
 		}
+
+		
 	}
-	
 	else {
-		if (Keys[87]) {//W
-			scene->player->GetComponent<Player>()->moveDirection.y = -1;
-		}
-		else if (Keys[83]) {//S
-			scene->player->GetComponent<Player>()->moveDirection.y = 1;
-		}
-		else {
+		scene->player->GetComponent<Player>()->facingDirection = scene->player->GetComponent<Player>()->moveDirection;
+	}
+	if (Keys[87]) {//W
+		scene->player->GetComponent<Player>()->moveDirection.y = -1;
+	}
+	else if (Keys[83]) {//S
+		scene->player->GetComponent<Player>()->moveDirection.y = 1;
+	}
+	else{
+		if (!Player1->IsConnected() || isMYZ)
 			scene->player->GetComponent<Player>()->moveDirection.y = 0;
-		}
-		if (Keys[65]) {//A
-			scene->player->GetComponent<Player>()->moveDirection.x = -1;
-		}
-		else if (Keys[68]) {//D
-			scene->player->GetComponent<Player>()->moveDirection.x = 1;
-		}
-		else {
+	}
+	if (Keys[65]) {//A
+		scene->player->GetComponent<Player>()->moveDirection.x = -1;
+	}
+	else if (Keys[68]) {//D
+		scene->player->GetComponent<Player>()->moveDirection.x = 1;
+	}
+	else {
+		if (!Player1->IsConnected() || isMXZ)
 			scene->player->GetComponent<Player>()->moveDirection.x = 0;
-		}
-
-		if (Keys[32]) {//Space
-			scene->player->GetComponent<Player>()->Shoot();
-		}
-
-			if (Keys[84]) {//T
-				Restart();
-			}
+	}
+	if (isFYZ && isFXZ) {
+		scene->player->GetComponent<Player>()->facingDirection = scene->player->GetComponent<Player>()->moveDirection;
+	}
+	if (Keys[32]) {//Space
+		scene->player->GetComponent<Player>()->Shoot();
+	}
+	if (Keys[84]) {//T
+		Restart();
 	}
 }
 
@@ -282,7 +293,7 @@ void Game::Render()
 		scene->lose->Draw(*Renderer, scene->cameraPosition);
 	}
 
-	if (scene->enemies.size() ==0) {
+	if (scene->enemies.size() == 0) {
 		scene->win->Draw(*Renderer, scene->cameraPosition);
 		scene->player->destroyed=true;
 	}
@@ -392,7 +403,7 @@ void Game::HandleCollisions()
 				line.endPoint = scene->enemyBullets[i]->position;
 				bool isIntersecting = LinecastCollider(line, *(scene->player->GetComponent<BoxCollider>()), hit);
 				if (isIntersecting) {
-					printf("HIT");
+					//printf("HIT");
 					scene->enemyBullets[i]->destroyed = true;
 					scene->player->destroyed = true;
 					break;
