@@ -12,8 +12,8 @@ using namespace Physics;
 // Represents the current state of the game
 enum GameState {
 	GAME_ACTIVE,
-	GAME_MENU,
-	GAME_END
+	GAME_WIN,
+	GAME_LOSE
 };
 
 // Game holds all game-related state and functionality.
@@ -43,6 +43,7 @@ private:
 	bool IsInScreen(glm::vec2 pos);
 	void HandleCollisions();
 	void Restart();
+	void EndGame(bool isWin);
 };
 
 #endif

@@ -20,7 +20,8 @@ void Player::Start()
 	this->gameObject->GetComponent<Player>()->shootVelocity = 160;
 	this->gameObject->GetComponent<Player>()->isReadyShoot = true;
 	this->gameObject->GetComponent<Player>()->weaponCoolDownIntervel = 0.4f;
-	this->gameObject->GetComponent<Player>()->remainAmmo = 10;
+	this->gameObject->GetComponent<Player>()->remainAmmo = 0; 
+	this->gameObject->GetComponent<Player>()->ClearWeapon();
 }
 
 void Player::Update(float deltaTime)
@@ -61,7 +62,7 @@ void Player::CalculateRotation()
 
 void Player::Shoot()
 {
-	if (!isReadyShoot||remainAmmo==0) {
+	if (!isReadyShoot || remainAmmo == 0 || currentWeapon == 0) {
 		return;
 	}
 	bool isFoundUsedBullet = false;
@@ -71,7 +72,6 @@ void Player::Shoot()
 			scene->playerBullets[i]->position = this->gameObject->position;
 			scene->playerBullets[i]->GetComponent<Rigidbody>()->velocity = glm::normalize(facingDirection) * shootVelocity;
 			scene->playerBullets[i]->GetComponent<Bullet>()->lastPosition = this->gameObject->position;
-			remainAmmo--;
 			isFoundUsedBullet = true;
 			break;
 		}
@@ -85,5 +85,38 @@ void Player::Shoot()
 		bullet->GetComponent<Bullet>()->lastPosition = this->gameObject->position;
 		scene->playerBullets.push_back(bullet);
 	}
+	remainAmmo--;
 	isReadyShoot = false;
+}
+
+void Player::ClearWeapon()
+{
+	this->currentWeapon = 0;
+	this->gameObject->sprite = this->playerIdleTexture;
+}
+
+void Player::PickUpPistol()
+{
+	this->currentWeapon = 1;
+	this->gameObject->sprite = this->playerPistolTexture;
+	this->weaponCoolDownIntervel = 0.4f;
+	this->remainAmmo = 7;
+}
+
+void Player::PickUpAssaultRifle()
+{
+	this->currentWeapon = 2;
+	this->gameObject->sprite = this->playerAssaultRifleTexture; 
+	this->weaponCoolDownIntervel = 0.2f;
+	this->remainAmmo = 20;
+}
+
+void Player::PickUpAmmoSupply()
+{
+	if (this->currentWeapon == 1) {
+		this->remainAmmo = 7;
+	}
+	if (this->currentWeapon == 2) {
+		this->remainAmmo = 20;
+	}
 }

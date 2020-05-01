@@ -54,40 +54,54 @@ void Scene::CreateDefaultScene()
 	enemies.push_back(enemy1);
 
 	//Generate player
-	Texture2D playerTexture;
-	playerTexture = ResourceManager::GetTexture("PlayerPistol");
-	player = new GameObject(glm::vec2(0, 0), glm::vec2(32, 32), playerTexture, glm::vec3(1.0f));
+	Texture2D playerIdleTexture;
+	playerIdleTexture = ResourceManager::GetTexture("PlayerIdle");
+	Texture2D playerPistolTexture;
+	playerPistolTexture = ResourceManager::GetTexture("PlayerPistol");
+	Texture2D playerAssaultRifleTexture;
+	playerAssaultRifleTexture = ResourceManager::GetTexture("PlayerAssaultRifle");
+
+	player = new GameObject(glm::vec2(0, 0), glm::vec2(32, 32), playerIdleTexture, glm::vec3(1.0f));
 	player->AddComponent<Player>();
 	player->GetComponent<Player>()->scene = this;
+	player->GetComponent<Player>()->playerIdleTexture = playerIdleTexture;
+	player->GetComponent<Player>()->playerPistolTexture = playerPistolTexture;
+	player->GetComponent<Player>()->playerAssaultRifleTexture = playerAssaultRifleTexture;
 	player->GetComponent<Player>()->bulletTexture = bulletTexture;
 
-	Texture2D itemTexture;
-	itemTexture = ResourceManager::GetTexture("AssaultRifle");
-	GameObject* item1 = new GameObject(glm::vec2(-100, 0), glm::vec2(32, 32), itemTexture, glm::vec3(1.0f));
+	Texture2D itemPistolTexture;
+	itemPistolTexture = ResourceManager::GetTexture("Pistol");
+	Texture2D itemAssaultRifleTexture;
+	itemAssaultRifleTexture = ResourceManager::GetTexture("AssaultRifle");
+	Texture2D itemAmmoSupplyTexture;
+	itemAmmoSupplyTexture = ResourceManager::GetTexture("AmmoSupply");
+
+	GameObject* item1 = new GameObject(glm::vec2(-100, 0), glm::vec2(32, 32), itemAssaultRifleTexture, glm::vec3(1.0f));
 	item1->AddComponent<Item>();
 	item1->GetComponent<Item>()->scene = this;
+	item1->GetComponent<Item>()->pistolTexture = itemPistolTexture;
+	item1->GetComponent<Item>()->assaultRifleTexture = itemAssaultRifleTexture;
+	item1->GetComponent<Item>()->ammoSupplyTexture = itemAmmoSupplyTexture;
+	item1->GetComponent<Item>()->SetTypeTexture(1);
 	items.push_back(item1);
 
-	Texture2D itemTexture1;
-	itemTexture = ResourceManager::GetTexture("Pistol");
-	GameObject* item2 = new GameObject(glm::vec2(100, 0), glm::vec2(32, 32), itemTexture, glm::vec3(1.0f));
+	GameObject* item2 = new GameObject(glm::vec2(100, 0), glm::vec2(32, 32), itemAssaultRifleTexture, glm::vec3(1.0f));
 	item2->AddComponent<Item>();
 	item2->GetComponent<Item>()->scene = this;
+	item2->GetComponent<Item>()->pistolTexture = itemPistolTexture;
+	item2->GetComponent<Item>()->assaultRifleTexture = itemAssaultRifleTexture;
+	item2->GetComponent<Item>()->ammoSupplyTexture = itemAmmoSupplyTexture;
+	item2->GetComponent<Item>()->SetTypeTexture(2);
 	items.push_back(item2);
 
-	Texture2D itemTexture2;
-	itemTexture = ResourceManager::GetTexture("AmmoSupply");
-	GameObject* item3 = new GameObject(glm::vec2(100, 100), glm::vec2(32, 32), itemTexture, glm::vec3(1.0f));
+	GameObject* item3 = new GameObject(glm::vec2(100, 100), glm::vec2(32, 32), itemAssaultRifleTexture, glm::vec3(1.0f));
 	item3->AddComponent<Item>();
 	item3->GetComponent<Item>()->scene = this;
+	item3->GetComponent<Item>()->pistolTexture = itemPistolTexture;
+	item3->GetComponent<Item>()->assaultRifleTexture = itemAssaultRifleTexture;
+	item3->GetComponent<Item>()->ammoSupplyTexture = itemAmmoSupplyTexture;
+	item3->GetComponent<Item>()->SetTypeTexture(3);
 	items.push_back(item3);
 
-	Texture2D winTexture;
-	winTexture = ResourceManager::GetTexture("Win");
-	win = new GameObject(cameraPosition, glm::vec2(1440, 860), winTexture, glm::vec3(1.0f));
-
-	Texture2D loseTexture;
-	loseTexture = ResourceManager::GetTexture("Lose");
-	lose = new GameObject(cameraPosition, glm::vec2(1440, 860), loseTexture, glm::vec3(1.0f));
 
 }

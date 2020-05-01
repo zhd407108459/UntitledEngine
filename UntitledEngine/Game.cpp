@@ -73,6 +73,10 @@ void Game::Update(GLfloat dt)
 	//printf("%f\n",scene->enemies[0]->position.x);
 	//printf("%f\n", scene->player->GetComponent<Player>()->facingDirection.x);
 	//printf("%d\n",scene->enemies.size());
+	if (State != GameState::GAME_ACTIVE) {
+		return;
+	}
+
 
 	if ((scene->basicBackGround->position - scene->cameraPosition).x + 32 > 32) {
 		scene->basicBackGround->position.x -= 32;
@@ -118,7 +122,17 @@ void Game::Update(GLfloat dt)
 
 	HandleCollisions();
 
-	
+	bool isWin = true;
+	for (int i = 0; i < scene->enemies.size(); i++) {
+		if (!scene->enemies[i]->destroyed) {
+			isWin = false;
+			break;
+		}
+	}
+	if (isWin) {
+		//Win
+		EndGame(true);
+	}
 
 	//Xbox Input
 	/*if (Player1->IsConnected())
@@ -165,6 +179,13 @@ void Game::Update(GLfloat dt)
 
 void Game::ProcessInput(GLfloat dt)
 {
+	
+	if (State != GameState::GAME_ACTIVE) {
+		if (Keys[84]) {//T
+			Restart();
+		}
+		return;
+	}
 	bool isMYZ = false, isMXZ = false, isFYZ = false, isFXZ = false;
 	if (Player1->IsConnected()) {
 		
@@ -246,9 +267,6 @@ void Game::ProcessInput(GLfloat dt)
 	if (Keys[32]) {//Space
 		scene->player->GetComponent<Player>()->Shoot();
 	}
-	if (Keys[84]) {//T
-		Restart();
-	}
 }
 
 void Game::Render()
@@ -289,13 +307,16 @@ void Game::Render()
 		}
 			
 	}
-	if (scene->player->destroyed) {
-		scene->lose->Draw(*Renderer, scene->cameraPosition);
+	
+	if (State == GameState::GAME_WIN) {
+		Texture2D winTexture;
+		winTexture = ResourceManager::GetTexture("Win");
+		Renderer->DrawSprite(winTexture, glm::vec2(0, 0), glm::vec2(1280, 720), 0, glm::vec3(1.0f));
 	}
-
-	if (scene->enemies.size() == 0) {
-		scene->win->Draw(*Renderer, scene->cameraPosition);
-		scene->player->destroyed=true;
+	else if (State == GameState::GAME_LOSE) {
+		Texture2D loseTexture;
+		loseTexture = ResourceManager::GetTexture("Lose");
+		Renderer->DrawSprite(loseTexture, glm::vec2(0, 0), glm::vec2(1280, 720), 0, glm::vec3(1.0f));
 	}
 
 }
@@ -370,7 +391,7 @@ void Game::HandleCollisions()
 				if (isIntersecting) {
 					scene->playerBullets[i]->destroyed = true;
 					scene->enemies[j]->destroyed = true;
-					scene->enemies.erase(scene->enemies.begin()+j);
+					//scene->enemies.erase(scene->enemies.begin()+j);
 					break;
 				}
 			}
@@ -393,21 +414,18 @@ void Game::HandleCollisions()
 			}
 		}
 		if (!scene->enemyBullets[i]->destroyed) {
-			for (int j = 0; j < scene->enemies.size(); j++) {
-				/*if (scene->player->destroyed) {
-					continue;
-				}*/
-				HitInfo hit;
-				Line line;
-				line.startPoint = scene->enemyBullets[i]->GetComponent<Bullet>()->lastPosition;
-				line.endPoint = scene->enemyBullets[i]->position;
-				bool isIntersecting = LinecastCollider(line, *(scene->player->GetComponent<BoxCollider>()), hit);
-				if (isIntersecting) {
-					//printf("HIT");
-					scene->enemyBullets[i]->destroyed = true;
-					scene->player->destroyed = true;
-					break;
-				}
+			HitInfo hit;
+			Line line;
+			line.startPoint = scene->enemyBullets[i]->GetComponent<Bullet>()->lastPosition;
+			line.endPoint = scene->enemyBullets[i]->position;
+			bool isIntersecting = LinecastCollider(line, *(scene->player->GetComponent<BoxCollider>()), hit);
+			if (isIntersecting) {
+				//printf("HIT");
+				scene->enemyBullets[i]->destroyed = true;
+				scene->player->destroyed = true;
+				//Lose
+				EndGame(false);
+				break;
 			}
 		}
 
@@ -419,16 +437,14 @@ void Game::HandleCollisions()
 			bool isOverlapping = IsOverlapping(*(scene->items[i]->GetComponent<BoxCollider>()), *(scene->player->GetComponent<BoxCollider>()), hitpoint);
 			if (isOverlapping) {
 				scene->items[i]->destroyed = true;
-				if (i==0) {
-					scene->player->GetComponent<Player>()->weaponCoolDownIntervel = 0.2f;
-					scene->player->GetComponent<Player>()->remainAmmo = 30;
+				if (scene->items[i]->GetComponent<Item>()->type == 1) {
+					scene->player->GetComponent<Player>()->PickUpPistol();
 				}
-				if (i==1) {
-					scene->player->GetComponent<Player>()->weaponCoolDownIntervel = 0.4f;
-					scene->player->GetComponent<Player>()->remainAmmo = 10;
+				if (scene->items[i]->GetComponent<Item>()->type == 2) {
+					scene->player->GetComponent<Player>()->PickUpAssaultRifle();
 				}
-				if (i == 2) {
-					scene->player->GetComponent<Player>()->remainAmmo = 30;
+				if (scene->items[i]->GetComponent<Item>()->type == 3) {
+					scene->player->GetComponent<Player>()->PickUpAmmoSupply();
 				}
 
 			}
@@ -447,4 +463,24 @@ void Game::Restart()
 	}
 
 	scene->player->Start();
+
+	for (int i = 0; i < scene->items.size(); i++) {
+		scene->items[i]->Start();
+	}
+
+	Player1 = new XboxInput(1);
+	State = GameState::GAME_ACTIVE;
+}
+
+void Game::EndGame(bool isWin)
+{
+	if (State != GameState::GAME_ACTIVE) {
+		return;
+	}
+	if (isWin) {
+		State = GameState::GAME_WIN;
+	}
+	else {
+		State = GameState::GAME_LOSE;
+	}
 }
