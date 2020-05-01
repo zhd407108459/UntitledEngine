@@ -105,3 +105,156 @@ void Scene::CreateDefaultScene()
 
 
 }
+
+void Scene::LoadSceneFromFile(std::string path)
+{
+	glm::vec2 startPos, currentPos;
+
+	cameraPosition = glm::vec2(-640, -360);
+
+
+
+
+	//Generate obstacles
+	Texture2D ironTileTexture;
+	ironTileTexture = ResourceManager::GetTexture("IronTile");
+	Texture2D woodTileTexture;
+	woodTileTexture = ResourceManager::GetTexture("WoodTile");
+
+	//Generate enemies and player, and give the, the texture of bullet
+	Texture2D bulletTexture;
+	bulletTexture = ResourceManager::GetTexture("Bullet");
+
+	//Generate enemies
+	Texture2D enemyTexture;
+	enemyTexture = ResourceManager::GetTexture("Enemy");
+	
+
+	//Generate player
+	Texture2D playerIdleTexture;
+	playerIdleTexture = ResourceManager::GetTexture("PlayerIdle");
+	Texture2D playerPistolTexture;
+	playerPistolTexture = ResourceManager::GetTexture("PlayerPistol");
+	Texture2D playerAssaultRifleTexture;
+	playerAssaultRifleTexture = ResourceManager::GetTexture("PlayerAssaultRifle");
+
+
+	Texture2D itemPistolTexture;
+	itemPistolTexture = ResourceManager::GetTexture("Pistol");
+	Texture2D itemAssaultRifleTexture;
+	itemAssaultRifleTexture = ResourceManager::GetTexture("AssaultRifle");
+	Texture2D itemAmmoSupplyTexture;
+	itemAmmoSupplyTexture = ResourceManager::GetTexture("AmmoSupply");
+
+	
+
+
+	ifstream file(path);
+
+	string line;
+
+	if (file)
+	{
+		getline(file, line);
+		vector<int> firstLineArray;
+		stringstream ss(line);
+		int temp;
+		while (ss >> temp) {
+			firstLineArray.push_back(temp);
+		}
+		if (firstLineArray.size() < 2) {
+			cout << "error file" << endl;
+			return;
+		}
+		startPos.x = firstLineArray[0];
+		startPos.y = firstLineArray[1];
+		currentPos = startPos;
+		while (getline(file, line))
+		{
+			for (int i = 0; i < line.length(); i++) {
+				if (line.at(i) == '0') {//empty
+					
+				}
+				else if (line.at(i) == '1') {//player
+					player = new GameObject(currentPos, glm::vec2(32, 32), playerIdleTexture, glm::vec3(1.0f));
+					player->AddComponent<Player>();
+					player->GetComponent<Player>()->scene = this;
+					player->GetComponent<Player>()->playerIdleTexture = playerIdleTexture;
+					player->GetComponent<Player>()->playerPistolTexture = playerPistolTexture;
+					player->GetComponent<Player>()->playerAssaultRifleTexture = playerAssaultRifleTexture;
+					player->GetComponent<Player>()->bulletTexture = bulletTexture;
+				}
+				else if (line.at(i) == '2') {//enemy
+					GameObject* enemy1 = new GameObject(currentPos, glm::vec2(32, 32), enemyTexture, glm::vec3(1.0f));
+					enemy1->AddComponent<Enemy>();
+					enemy1->GetComponent<Enemy>()->scene = this;
+					enemy1->GetComponent<Enemy>()->bulletTexture = bulletTexture;
+					enemies.push_back(enemy1);
+				}
+				else if (line.at(i) == '3') {//wood tile
+					GameObject* obs = new GameObject(currentPos, glm::vec2(32, 32), woodTileTexture, glm::vec3(1.0f));
+					obs->AddComponent<BoxCollider>();
+					obs->GetComponent<BoxCollider>()->SetSize(32, 32);
+					obs->AddComponent<Rigidbody>();
+					obs->GetComponent<Rigidbody>()->mass = 1;
+					obs->GetComponent<Rigidbody>()->isStatic = true;
+					obstacles.push_back(obs);
+				}
+				else if (line.at(i) == '4') {//iron tile
+					GameObject* obs = new GameObject(currentPos, glm::vec2(32, 32), ironTileTexture, glm::vec3(1.0f));
+					obs->AddComponent<BoxCollider>();
+					obs->GetComponent<BoxCollider>()->SetSize(32, 32);
+					obs->AddComponent<Rigidbody>();
+					obs->GetComponent<Rigidbody>()->mass = 1;
+					obs->GetComponent<Rigidbody>()->isStatic = true;
+					obstacles.push_back(obs);
+				}
+				else if (line.at(i) == '5') {//pistol
+					GameObject* item = new GameObject(currentPos, glm::vec2(32, 32), itemAssaultRifleTexture, glm::vec3(1.0f));
+					item->AddComponent<Item>();
+					item->GetComponent<Item>()->scene = this;
+					item->GetComponent<Item>()->pistolTexture = itemPistolTexture;
+					item->GetComponent<Item>()->assaultRifleTexture = itemAssaultRifleTexture;
+					item->GetComponent<Item>()->ammoSupplyTexture = itemAmmoSupplyTexture;
+					item->GetComponent<Item>()->SetTypeTexture(1);
+					items.push_back(item);
+				}
+				else if (line.at(i) == '6') {//ar
+					GameObject* item = new GameObject(currentPos, glm::vec2(32, 32), itemAssaultRifleTexture, glm::vec3(1.0f));
+					item->AddComponent<Item>();
+					item->GetComponent<Item>()->scene = this;
+					item->GetComponent<Item>()->pistolTexture = itemPistolTexture;
+					item->GetComponent<Item>()->assaultRifleTexture = itemAssaultRifleTexture;
+					item->GetComponent<Item>()->ammoSupplyTexture = itemAmmoSupplyTexture;
+					item->GetComponent<Item>()->SetTypeTexture(2);
+					items.push_back(item);
+				}
+				else if (line.at(i) == '7') {//ammo supply
+					GameObject* item = new GameObject(currentPos, glm::vec2(32, 32), itemAssaultRifleTexture, glm::vec3(1.0f));
+					item->AddComponent<Item>();
+					item->GetComponent<Item>()->scene = this;
+					item->GetComponent<Item>()->pistolTexture = itemPistolTexture;
+					item->GetComponent<Item>()->assaultRifleTexture = itemAssaultRifleTexture;
+					item->GetComponent<Item>()->ammoSupplyTexture = itemAmmoSupplyTexture;
+					item->GetComponent<Item>()->SetTypeTexture(3);
+					items.push_back(item);
+				}
+				currentPos.x += 32;
+			}
+			currentPos.x = startPos.x;
+			currentPos.y += 32;
+		}
+
+		//Generate basic background
+		Texture2D backgroundTexture;
+		backgroundTexture = ResourceManager::GetTexture("Background");
+		basicBackGround = new GameObject(player->position + cameraPosition, glm::vec2(1344, 784), backgroundTexture, glm::vec3(1.0f));
+	}
+	else
+	{
+		cout << "no such file" << endl;
+		return;
+	}
+
+
+}

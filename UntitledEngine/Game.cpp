@@ -52,7 +52,7 @@ void Game::Init()
 
 	// Set up the scene
 	scene = new Scene();
-	scene->CreateDefaultScene();
+	scene->LoadSceneFromFile("data/scene.txt");
 
 	for (int i = 0; i < scene->enemies.size(); i++) {
 		scene->enemies[i]->Start();
@@ -462,7 +462,7 @@ void Game::HandleCollisions()
 void Game::Restart()
 {
 	scene = new Scene();
-	scene->CreateDefaultScene();
+	scene->LoadSceneFromFile("data/scene.txt");
 
 	for (int i = 0; i < scene->enemies.size(); i++) {
 		scene->enemies[i]->Start();

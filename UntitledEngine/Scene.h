@@ -1,4 +1,7 @@
 #pragma once
+#include <fstream>
+#include <iostream>
+#include <sstream>
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Rigidbody.h"
@@ -8,7 +11,7 @@
 #include "Bullet.h"
 #include "Item.h"
 
-
+using namespace std;
 
 class Scene {
 public:
@@ -28,4 +31,5 @@ public:
 
 	void CreateDefaultScene();
 
+	void LoadSceneFromFile(std::string path);
 };

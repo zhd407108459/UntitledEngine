@@ -23,6 +23,7 @@ void Enemy::Start()
 	this->gameObject->GetComponent<Enemy>()->partrolDistance = 10.0f;
 	this->gameObject->GetComponent<Enemy>()->isMoveRight = true;
 	this->gameObject->GetComponent<Enemy>()->isAttack = true;
+	this->gameObject->GetComponent<Enemy>()->initialPos = this->gameObject->position;
 }
 
 void Enemy::Update(float deltaTime)
@@ -103,10 +104,10 @@ void Enemy::Patrol()
 			moveDirection.x = -1;
 		}
 
-		if (scene->enemies[0]->position.x > 100) {
+		if (scene->enemies[0]->position.x > initialPos.x + 96) {
 			isMoveRight = false;
 		}
-		else if (scene->enemies[0]->position.x < 0) {
+		else if (scene->enemies[0]->position.x < initialPos.x) {
 			isMoveRight = true;
 		}
 	}

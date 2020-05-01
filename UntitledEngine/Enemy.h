@@ -46,5 +46,7 @@ public:
 private:
 	float coolDownTimer;
 
+	glm::vec2 initialPos;
+
 };
 
