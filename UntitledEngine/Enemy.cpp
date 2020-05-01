@@ -95,7 +95,7 @@ void Enemy::Shoot()
 void Enemy::Patrol()
 {
 	double d;
-	d = sqrt(pow(scene->player->position.x - scene->enemies[0]->position.x, 2)+pow(scene->player->position.y - scene->enemies[0]->position.y,2));
+	d = sqrt(pow(scene->player->position.x - this->gameObject->position.x, 2)+pow(scene->player->position.y - this->gameObject->position.y,2));
 	if (d>visionRange) {
 		if (isMoveRight) {
 			moveDirection.x = 1;
@@ -104,17 +104,17 @@ void Enemy::Patrol()
 			moveDirection.x = -1;
 		}
 
-		if (scene->enemies[0]->position.x > initialPos.x + 96) {
+		if (this->gameObject->position.x > initialPos.x + 96) {
 			isMoveRight = false;
 		}
-		else if (scene->enemies[0]->position.x < initialPos.x) {
+		else if (this->gameObject->position.x < initialPos.x) {
 			isMoveRight = true;
 		}
 	}
 	else {
 		moveDirection.x = 0;
-		facingDirection.x = scene->player->position.x - scene->enemies[0]->position.x;
-		facingDirection.y = scene->player->position.y - scene->enemies[0]->position.y;
+		facingDirection.x = scene->player->position.x - this->gameObject->position.x;
+		facingDirection.y = scene->player->position.y - this->gameObject->position.y;
 		Shoot();
 
 	}
