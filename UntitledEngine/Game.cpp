@@ -239,7 +239,9 @@ void Game::ProcessInput(GLfloat dt)
 		
 	}
 	else {
-		scene->player->GetComponent<Player>()->facingDirection = scene->player->GetComponent<Player>()->moveDirection;
+		if (scene->player->GetComponent<Player>()->moveDirection.x != 0 || scene->player->GetComponent<Player>()->moveDirection.y != 0) {
+			scene->player->GetComponent<Player>()->facingDirection = scene->player->GetComponent<Player>()->moveDirection;
+		}
 	}
 	if (Keys[87]) {//W
 		scene->player->GetComponent<Player>()->moveDirection.y = -1;
