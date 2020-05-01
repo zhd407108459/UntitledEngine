@@ -6,7 +6,6 @@
 #include <GLFW/glfw3.h>
 #include "Scene.h"
 #include "PhysicsGeneralMethods.h"
-
 using namespace Physics;
 
 // Represents the current state of the game

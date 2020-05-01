@@ -3,13 +3,11 @@
 #include "SpriteRenderer.h"
 #include "XboxInput.h"
 #include <iostream>
-#include<math.h>;
-
+#include <math.h>
 
 // Game-related State data
 SpriteRenderer* Renderer;
 XboxInput* Player1;
-
 
 Game::Game(GLuint width, GLuint height)
 	: State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -399,6 +397,7 @@ void Game::HandleCollisions()
 				if (isIntersecting) {
 					scene->playerBullets[i]->destroyed = true;
 					scene->enemies[j]->destroyed = true;
+					scene->SoundEngine->play2D("audio/Death.wav", false);
 					//scene->enemies.erase(scene->enemies.begin()+j);
 					break;
 				}
@@ -487,8 +486,10 @@ void Game::EndGame(bool isWin)
 	}
 	if (isWin) {
 		State = GameState::GAME_WIN;
+		scene->SoundEngine->play2D("audio/Win.wav", false);
 	}
 	else {
 		State = GameState::GAME_LOSE;
+		scene->SoundEngine->play2D("audio/Death.wav", false);
 	}
 }

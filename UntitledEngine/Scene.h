@@ -10,12 +10,17 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Item.h"
+#include <irrklang/irrKlang.h>
+
+using namespace irrklang;
 
 using namespace std;
 
 class Scene {
 public:
 	glm::vec2 cameraPosition;
+
+	ISoundEngine* SoundEngine;
 
 	GameObject* player;
 

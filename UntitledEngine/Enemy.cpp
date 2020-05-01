@@ -89,6 +89,7 @@ void Enemy::Shoot()
 		bullet->GetComponent<Bullet>()->lastPosition = this->gameObject->position;
 		scene->enemyBullets.push_back(bullet);
 	}
+	scene->SoundEngine->play2D("audio/ShootBullet.wav", false);
 	isReadyShoot = false;
 }
 

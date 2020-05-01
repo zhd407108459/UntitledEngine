@@ -86,6 +86,7 @@ void Player::Shoot()
 		scene->playerBullets.push_back(bullet);
 	}
 	remainAmmo--;
+	scene->SoundEngine->play2D("audio/ShootBullet.wav", false);
 	isReadyShoot = false;
 }
 
@@ -97,6 +98,7 @@ void Player::ClearWeapon()
 
 void Player::PickUpPistol()
 {
+	scene->SoundEngine->play2D("audio/PickUp.wav", false);
 	this->currentWeapon = 1;
 	this->gameObject->sprite = this->playerPistolTexture;
 	this->weaponCoolDownIntervel = 0.4f;
@@ -105,6 +107,7 @@ void Player::PickUpPistol()
 
 void Player::PickUpAssaultRifle()
 {
+	scene->SoundEngine->play2D("audio/PickUp.wav", false);
 	this->currentWeapon = 2;
 	this->gameObject->sprite = this->playerAssaultRifleTexture; 
 	this->weaponCoolDownIntervel = 0.2f;
@@ -113,6 +116,7 @@ void Player::PickUpAssaultRifle()
 
 void Player::PickUpAmmoSupply()
 {
+	scene->SoundEngine->play2D("audio/PickUp.wav", false);
 	if (this->currentWeapon == 1) {
 		this->remainAmmo = 7;
 	}

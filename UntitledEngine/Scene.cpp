@@ -3,6 +3,7 @@
 
 void Scene::CreateDefaultScene()
 {
+	SoundEngine = createIrrKlangDevice();
 	cameraPosition = glm::vec2(-640, -360);
 
 	//Generate basic background
@@ -108,6 +109,7 @@ void Scene::CreateDefaultScene()
 
 void Scene::LoadSceneFromFile(std::string path)
 {
+	SoundEngine = createIrrKlangDevice();
 	glm::vec2 startPos, currentPos;
 
 	cameraPosition = glm::vec2(-640, -360);
